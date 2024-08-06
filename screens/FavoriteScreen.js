@@ -185,7 +185,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     backgroundColor: '#fff',
     marginHorizontal: 8,
-    width: 200,
+    width: 330,
+    alignSelf:'center'
   },
   qrCodeHeader: {
     flexDirection: 'row',
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   usernameText: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#000',
   },

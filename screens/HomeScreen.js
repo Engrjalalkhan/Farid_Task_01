@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   usernameText: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#000',
   },
@@ -547,7 +547,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   modalUsernameText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   modalDetailsContainer: {
