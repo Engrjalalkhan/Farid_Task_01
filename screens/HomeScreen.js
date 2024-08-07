@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,7 +15,8 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import QRCode from 'react-native-qrcode-svg';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
   const [username, setUsername] = useState('');
@@ -31,6 +32,49 @@ const HomeScreen = () => {
   const [favorites, setFavorites] = useState([]);
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    loadQrCodes();
+    loadFavorites();
+  }, []);
+
+  const loadQrCodes = async () => {
+    try {
+      const storedQrCodes = await AsyncStorage.getItem('qrCodes');
+      if (storedQrCodes) {
+        setQrCodes(JSON.parse(storedQrCodes));
+      }
+    } catch (error) {
+      console.error('Failed to load QR codes:', error);
+    }
+  };
+
+  const loadFavorites = async () => {
+    try {
+      const storedFavorites = await AsyncStorage.getItem('favorites');
+      if (storedFavorites) {
+        setFavorites(JSON.parse(storedFavorites));
+      }
+    } catch (error) {
+      console.error('Failed to load favorites:', error);
+    }
+  };
+
+  const saveQrCodes = async (codes) => {
+    try {
+      await AsyncStorage.setItem('qrCodes', JSON.stringify(codes));
+    } catch (error) {
+      console.error('Failed to save QR codes:', error);
+    }
+  };
+
+  const saveFavorites = async (favorites) => {
+    try {
+      await AsyncStorage.setItem('favorites', JSON.stringify(favorites));
+    } catch (error) {
+      console.error('Failed to save favorites:', error);
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -54,9 +98,11 @@ const HomeScreen = () => {
     setTimeout(() => {
       setLoadingModalVisible(false);
       const qrValue = JSON.stringify(qrData);
-      setQrCodes([...qrCodes, qrValue]);
+      const newQrCodes = [...qrCodes, qrValue];
+      setQrCodes(newQrCodes);
       setQrCodeValue(qrValue);
       setSuccessModalVisible(true);
+      saveQrCodes(newQrCodes);
     }, 2000); // Simulate a network request or processing delay
   };
 
@@ -65,6 +111,8 @@ const HomeScreen = () => {
     setQrCodes(newQrCodes);
     const newFavorites = favorites.filter((_, i) => i !== index);
     setFavorites(newFavorites);
+    saveQrCodes(newQrCodes);
+    saveFavorites(newFavorites);
   };
 
   const handleShareQRCode = qrValue => {
@@ -73,11 +121,14 @@ const HomeScreen = () => {
   };
 
   const handleFavoriteQRCode = qrValue => {
+    let newFavorites;
     if (favorites.includes(qrValue)) {
-      setFavorites(favorites.filter(item => item !== qrValue));
+      newFavorites = favorites.filter(item => item !== qrValue);
     } else {
-      setFavorites([...favorites, qrValue]);
+      newFavorites = [...favorites, qrValue];
     }
+    setFavorites(newFavorites);
+    saveFavorites(newFavorites);
   };
 
   const renderQrCodeCard = ({item, index}) => (
