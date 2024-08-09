@@ -9,15 +9,19 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native'; // Import useNavigation
+import { useRoute, useNavigation } from '@react-navigation/native';
 import QRCode from 'react-native-qrcode-svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+
+// Initialize banner ad ID (replace with your ad unit ID)
+const bannerAdUnitId = __DEV__ ? TestIds.BANNER : 'YOUR_BANNER_AD_UNIT_ID';
 
 const FavoriteScreen = () => {
   const route = useRoute();
-  const navigation = useNavigation(); // Initialize useNavigation
-  const { favoriteCodes, setFavoriteCodes } = route.params; // Ensure `setFavoriteCodes` is passed as a parameter
+  const navigation = useNavigation();
+  const { favoriteCodes, setFavoriteCodes } = route.params;
   const [visibleCodes, setVisibleCodes] = React.useState(favoriteCodes);
   const [selectedQRCode, setSelectedQRCode] = React.useState(null);
   const [isModalVisible, setModalVisible] = React.useState(false);
@@ -61,48 +65,57 @@ const FavoriteScreen = () => {
     const qrCodeData = JSON.parse(item);
 
     return (
-      <View style={styles.qrCodeCard}>
-        <Text></Text>
-        <View style={styles.qrCodeHeader}>
-          <Text style={styles.usernameText}>{qrCodeData.username}</Text>
-          <TouchableOpacity onPress={() => handleFavoriteQRCode(item)}>
-            <Icon
-              name={favoriteCodes.includes(item) ? 'star' : 'star-o'}
-              size={24}
-              color={favoriteCodes.includes(item) ? 'gold' : 'gray'}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.qrCodeContent}>
-          <View style={styles.detailsContainer}>
-            <Text style={styles.networkCategoryText}>
-              <Icon name="home" size={16} color="#000" /> {qrCodeData.networkCategory}
-            </Text>
-            <Text style={styles.encryptionTypeText}>
-              <MaterialIcons name="security" size={16} color="#000" /> {qrCodeData.encryptionType}
-            </Text>
+      <View>
+        <View style={styles.qrCodeCard}>
+          <Text></Text>
+          <View style={styles.qrCodeHeader}>
+            <Text style={styles.usernameText}>{qrCodeData.username}</Text>
+            <TouchableOpacity onPress={() => handleFavoriteQRCode(item)}>
+              <Icon
+                name={favoriteCodes.includes(item) ? 'star' : 'star-o'}
+                size={24}
+                color={favoriteCodes.includes(item) ? 'gold' : 'gray'}
+              />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.qrCodeIconContainer}>
-            <Icon name="qrcode" size={50} color="#000" />
-          </TouchableOpacity>
+          <View style={styles.qrCodeContent}>
+            <View style={styles.detailsContainer}>
+              <Text style={styles.networkCategoryText}>
+                <Icon name="home" size={16} color="#000" /> {qrCodeData.networkCategory}
+              </Text>
+              <Text style={styles.encryptionTypeText}>
+                <MaterialIcons name="security" size={16} color="#000" /> {qrCodeData.encryptionType}
+              </Text>
+            </View>
+            <TouchableOpacity style={styles.qrCodeIconContainer}>
+              <Icon name="qrcode" size={50} color="#000" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.qrCodeActions}>
+            <TouchableOpacity
+              onPress={() => handleViewQRCode(item)}
+              style={{ backgroundColor: '#2196F3', width: '50%', borderRadius: 10, height: 30 }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: 'white',
+                  textAlign: 'center',
+                }}>
+                Share
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleDeleteQRCode(item)}>
+              <Icon name="trash" size={30} color="red" />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.qrCodeActions}>
-          <TouchableOpacity
-            onPress={() => handleViewQRCode(item)}
-            style={{ backgroundColor: '#2196F3', width: '50%', borderRadius: 10, height: 30 }}>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                color: 'white',
-                textAlign: 'center',
-              }}>
-              Share
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDeleteQRCode(item)}>
-            <Icon name="trash" size={30} color="red" />
-          </TouchableOpacity>
+        <View style={styles.bannerAdContainer}>
+          <BannerAd
+            unitId={bannerAdUnitId}
+            size={BannerAdSize.FULL_BANNER}
+            requestOptions={{ requestNonPersonalizedAdsOnly: true }}
+          />
         </View>
       </View>
     );
@@ -246,6 +259,10 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 8,
     alignItems: 'center',
+  },
+  bannerAdContainer: {
+    marginVertical: 8, // Add spacing around the banner ad
+    alignItems: 'center', // Center the ad horizontally
   },
 });
 

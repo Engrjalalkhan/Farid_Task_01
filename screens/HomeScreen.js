@@ -17,6 +17,11 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import QRCode from 'react-native-qrcode-svg';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
+
+const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-xxxxxxxxxxxx/yyyyyyyyyyyy'; // Replace with your AdMob unit ID
+
+const interstitial = InterstitialAd.createForAdRequest(adUnitId);
 
 const HomeScreen = () => {
   const [username, setUsername] = useState('');
@@ -36,6 +41,7 @@ const HomeScreen = () => {
   useEffect(() => {
     loadQrCodes();
     loadFavorites();
+    loadAd();
   }, []);
 
   const loadQrCodes = async () => {
@@ -73,6 +79,18 @@ const HomeScreen = () => {
       await AsyncStorage.setItem('favorites', JSON.stringify(favorites));
     } catch (error) {
       console.error('Failed to save favorites:', error);
+    }
+  };
+
+  const loadAd = () => {
+    interstitial.load();
+  };
+
+  const showInterstitialAd = () => {
+    if (interstitial.loaded) {
+      interstitial.show();
+    } else {
+      console.log('Interstitial ad not loaded');
     }
   };
 
@@ -304,7 +322,11 @@ const HomeScreen = () => {
             <Text style={styles.successText}>QR Code Generated</Text>
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => setSuccessModalVisible(false)}>
+              onPress={() => {
+                showInterstitialAd();
+                setViewQRCodeModalVisible(true);
+                setSuccessModalVisible(false);
+              }}>
               <Text style={styles.closeButtonText}>View</Text>
             </TouchableOpacity>
           </View>

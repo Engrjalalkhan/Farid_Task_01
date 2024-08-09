@@ -1,4 +1,7 @@
 {
   "name": "QRGenerat",
-  "displayName": "QRGenerat"
+  "displayName": "QRGenerat",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-7220390534702309~9893428897"
+  }
 }
