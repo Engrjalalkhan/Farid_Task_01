@@ -83,15 +83,28 @@ const HomeScreen = () => {
   };
 
   const loadAd = () => {
-    interstitial.load();
+    if (!interstitial.loaded) {
+      interstitial.load();
+    }
   };
-
+  
   const showInterstitialAd = () => {
     if (interstitial.loaded) {
       interstitial.show();
+      // Reload the ad after showing it
+      loadAd();
     } else {
-      console.log('Interstitial ad not loaded');
+      // console.log('Interstitial ad not loaded, loading now');
+      loadAd();
     }
+  };
+  
+  // Example usage in the View button handler
+  const handleViewQRCode = () => {
+    showInterstitialAd();
+    // Proceed to show QR code or whatever logic follows
+    // setViewQRCodeModalVisible(true);
+    setSuccessModalVisible(false);
   };
 
   const togglePasswordVisibility = () => {
@@ -323,8 +336,9 @@ const HomeScreen = () => {
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => {
-                showInterstitialAd();
-                setSuccessModalVisible(false);
+                // showInterstitialAd();
+                // setSuccessModalVisible(false);
+                handleViewQRCode();
               }}>
               <Text style={styles.closeButtonText}>View</Text>
             </TouchableOpacity>
