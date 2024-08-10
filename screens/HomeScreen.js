@@ -324,7 +324,6 @@ const HomeScreen = () => {
               style={styles.closeButton}
               onPress={() => {
                 showInterstitialAd();
-                setViewQRCodeModalVisible(true);
                 setSuccessModalVisible(false);
               }}>
               <Text style={styles.closeButtonText}>View</Text>
