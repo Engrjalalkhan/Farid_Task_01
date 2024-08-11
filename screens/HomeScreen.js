@@ -361,83 +361,89 @@ const HomeScreen = () => {
         <View style={styles.modalContainer}>
           <View style={styles.viewQRCodeModalContent}>
             {/* Display the Username */}
-{(() => {
-  if (!qrCodeValue) {
-    return (
-      <View style={styles.modalHeader}>
-        <Text style={styles.modalErrorText}>No QR code data available</Text>
-      </View>
-    );
-  }
+            {(() => {
+              if (!qrCodeValue) {
+                return (
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalErrorText}>
+                      No QR code data available
+                    </Text>
+                  </View>
+                );
+              }
 
-  try {
-    const qrData = JSON.parse(qrCodeValue);
+              try {
+                const qrData = JSON.parse(qrCodeValue);
 
-    if (!qrData || !qrData.username) {
-      return (
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalErrorText}>Username not found in QR code data</Text>
-        </View>
-      );
-    }
+                if (!qrData || !qrData.username) {
+                  return (
+                    <View style={styles.modalHeader}>
+                      <Text style={styles.modalErrorText}>
+                        Username not found in QR code data
+                      </Text>
+                    </View>
+                  );
+                }
 
-    return (
-      <View style={styles.modalHeader}>
-        <Text style={styles.modalUsernameText}>
-          {qrData.username}
-        </Text>
-      </View>
-    );
-  } catch (error) {
-    console.error('Failed to parse QR code data:', error);
-    return (
-      <View style={styles.modalHeader}>
-        <Text style={styles.modalErrorText}>
-          Failed to load QR code data.
-        </Text>
-      </View>
-    );
-  }
-})()}
-
+                return (
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalUsernameText}>
+                      {qrData.username}
+                    </Text>
+                  </View>
+                );
+              } catch (error) {
+                console.error('Failed to parse QR code data:', error);
+                return (
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalErrorText}>
+                      Failed to load QR code data.
+                    </Text>
+                  </View>
+                );
+              }
+            })()}
 
             {/* Display the QR Code */}
             <QRCode value={qrCodeValue} size={200} />
 
             {/* Display network category and encryption type in a row */}
-{(() => {
-  if (!qrCodeValue) {
-    return (
-      <View style={styles.modalDetailsContainer}>
-        <Text style={styles.modalDetailsText}>No QR code data available</Text>
-      </View>
-    );
-  }
+            {(() => {
+              if (!qrCodeValue) {
+                return (
+                  <View style={styles.modalDetailsContainer}>
+                    <Text style={styles.modalDetailsText}>
+                      No QR code data available
+                    </Text>
+                  </View>
+                );
+              }
 
-  try {
-    const qrData = JSON.parse(qrCodeValue);
-    return (
-      <View style={styles.modalDetailsContainer}>
-        <Text style={styles.modalDetailsText}>
-          <Icon name="home" size={16} color="#000" />{' '}
-          {qrData.networkCategory || 'N/A'}
-        </Text>
-        <Text style={styles.modalDetailsText}>
-          <MaterialIcons name="security" size={16} color="#000" />{' '}
-          {qrData.encryptionType || 'N/A'}
-        </Text>
-      </View>
-    );
-  } catch (error) {
-    console.error('Failed to parse QR code data:', error);
-    return (
-      <View style={styles.modalDetailsContainer}>
-        <Text style={styles.modalDetailsText}>Invalid QR code data</Text>
-      </View>
-    );
-  }
-})()}
-
+              try {
+                const qrData = JSON.parse(qrCodeValue);
+                return (
+                  <View style={styles.modalDetailsContainer}>
+                    <Text style={styles.modalDetailsText}>
+                      <Icon name="home" size={16} color="#000" />{' '}
+                      {qrData.networkCategory || 'N/A'}
+                    </Text>
+                    <Text style={styles.modalDetailsText}>
+                      <MaterialIcons name="security" size={16} color="#000" />{' '}
+                      {qrData.encryptionType || 'N/A'}
+                    </Text>
+                  </View>
+                );
+              } catch (error) {
+                console.error('Failed to parse QR code data:', error);
+                return (
+                  <View style={styles.modalDetailsContainer}>
+                    <Text style={styles.modalDetailsText}>
+                      Invalid QR code data
+                    </Text>
+                  </View>
+                );
+              }
+            })()}
 
             {/* Close and Download buttons */}
             <View style={styles.buttonContainerqr}>
