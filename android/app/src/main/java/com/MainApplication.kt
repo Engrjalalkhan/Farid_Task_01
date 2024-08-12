@@ -1,4 +1,4 @@
-package com.qrgenerat
+package com.share.wifi.qr.code.hotspot.access.connection.app.info.easy.connect.friends.internet
 
 import android.app.Application
 import com.facebook.react.PackageList

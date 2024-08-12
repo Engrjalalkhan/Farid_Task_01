@@ -25,7 +25,7 @@ import {
 
 const adUnitId = __DEV__
   ? TestIds.INTERSTITIAL
-  : 'ca-app-pub-xxxxxxxxxxxx/yyyyyyyyyyyy'; // Replace with your AdMob unit ID
+  : 'ca-app-pub-7220390534702309/2901451037'; // Replace with your AdMob unit ID
 
 const interstitial = InterstitialAd.createForAdRequest(adUnitId);
 

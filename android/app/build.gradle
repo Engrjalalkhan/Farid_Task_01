@@ -74,9 +74,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.qrgenerat"
+    namespace "com.share.wifi.qr.code.hotspot.access.connection.app.info.easy.connect.friends.internet"
     defaultConfig {
-        applicationId "com.qrgenerat"
+        applicationId "com.share.wifi.qr.code.hotspot.access.connection.app.info.easy.connect.friends.internet"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
