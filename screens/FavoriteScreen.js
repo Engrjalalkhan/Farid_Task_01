@@ -13,10 +13,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import QRCode from 'react-native-qrcode-svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
-
-// Initialize banner ad ID (replace with your ad unit ID)
-const bannerAdUnitId = __DEV__ ? TestIds.BANNER : '';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 const FavoriteScreen = () => {
   const route = useRoute();
@@ -67,7 +64,6 @@ const FavoriteScreen = () => {
     return (
       <View>
         <View style={styles.qrCodeCard}>
-          <Text></Text>
           <View style={styles.qrCodeHeader}>
             <Text style={styles.usernameText}>{qrCodeData.username}</Text>
             <TouchableOpacity onPress={() => handleFavoriteQRCode(item)}>
@@ -110,11 +106,11 @@ const FavoriteScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
+        {/* Banner Ad */}
         <View style={styles.bannerAdContainer}>
           <BannerAd
-            unitId={bannerAdUnitId}
+            unitId="ca-app-pub-7220390534702309/4019027941" // Replace with your real ad unit ID
             size={BannerAdSize.FULL_BANNER}
-            requestOptions={{ requestNonPersonalizedAdsOnly: true }}
           />
         </View>
       </View>

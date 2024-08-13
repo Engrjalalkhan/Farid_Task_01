@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -15,8 +15,17 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import QRCode from 'react-native-qrcode-svg';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  InterstitialAd,
+  AdEventType,
+} from 'react-native-google-mobile-ads';
+
+// Replace this with your actual AdMob Interstitial Ad Unit ID
+const adUnitId = 'ca-app-pub-7220390534702309/1143784295';
+
+const interstitial = InterstitialAd.createForAdRequest(adUnitId);
 
 const HomeScreen = () => {
   const [username, setUsername] = useState('');
@@ -36,6 +45,37 @@ const HomeScreen = () => {
   useEffect(() => {
     loadQrCodes();
     loadFavorites();
+    loadAd();
+
+    const unsubscribeLoaded = interstitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        console.log('Interstitial ad loaded');
+      }
+    );
+
+    const unsubscribeError = interstitial.addAdEventListener(
+      AdEventType.ERROR,
+      (error) => {
+        console.error('Failed to load interstitial ad:', error);
+        loadAd(); // Reload the ad if there was an error
+      }
+    );
+
+    const unsubscribeClosed = interstitial.addAdEventListener(
+      AdEventType.CLOSED,
+      () => {
+        console.log('Interstitial ad closed');
+        loadAd(); // Reload the ad after it’s closed
+      }
+    );
+
+    // Clean up listeners on component unmount
+    return () => {
+      unsubscribeLoaded();
+      unsubscribeError();
+      unsubscribeClosed();
+    };
   }, []);
 
   const loadQrCodes = async () => {
@@ -60,7 +100,7 @@ const HomeScreen = () => {
     }
   };
 
-  const saveQrCodes = async (codes) => {
+  const saveQrCodes = async codes => {
     try {
       await AsyncStorage.setItem('qrCodes', JSON.stringify(codes));
     } catch (error) {
@@ -68,12 +108,33 @@ const HomeScreen = () => {
     }
   };
 
-  const saveFavorites = async (favorites) => {
+  const saveFavorites = async favorites => {
     try {
       await AsyncStorage.setItem('favorites', JSON.stringify(favorites));
     } catch (error) {
       console.error('Failed to save favorites:', error);
     }
+  };
+
+  const loadAd = () => {
+    if (!interstitial.loaded) {
+      interstitial.load();
+    }
+  };
+
+  const showInterstitialAd = () => {
+    if (interstitial.loaded) {
+      interstitial.show();
+      loadAd(); // Reload the ad after showing it
+    } else {
+      console.log('Interstitial ad not loaded, loading now...');
+      loadAd(); // Load the ad if not already loaded
+    }
+  };
+
+  const handleViewQRCode = () => {
+    showInterstitialAd();
+    setSuccessModalVisible(false);
   };
 
   const togglePasswordVisibility = () => {
@@ -304,7 +365,11 @@ const HomeScreen = () => {
             <Text style={styles.successText}>QR Code Generated</Text>
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => setSuccessModalVisible(false)}>
+              onPress={() => {
+                showInterstitialAd();
+                setSuccessModalVisible(false);
+                handleViewQRCode();
+              }}>
               <Text style={styles.closeButtonText}>View</Text>
             </TouchableOpacity>
           </View>
@@ -313,72 +378,119 @@ const HomeScreen = () => {
 
       {/* View QR Code Modal */}
       <Modal
-  transparent={true}
-  visible={viewQRCodeModalVisible}
-  animationType="fade"
-  onRequestClose={() => setViewQRCodeModalVisible(false)}>
-  <View style={styles.modalContainer}>
-    <View style={styles.viewQRCodeModalContent}>
-      {/* Display the Username */}
-      {(() => {
-        try {
-          const qrData = JSON.parse(qrCodeValue);
-          return (
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalUsernameText}>{qrData.username}</Text>
+        transparent={true}
+        visible={viewQRCodeModalVisible}
+        animationType="fade"
+        onRequestClose={() => setViewQRCodeModalVisible(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.viewQRCodeModalContent}>
+            {/* Display the Username */}
+            {(() => {
+              if (!qrCodeValue) {
+                return (
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalErrorText}>
+                      No QR code data available
+                    </Text>
+                  </View>
+                );
+              }
+
+              try {
+                const qrData = JSON.parse(qrCodeValue);
+
+                if (!qrData || !qrData.username) {
+                  return (
+                    <View style={styles.modalHeader}>
+                      <Text style={styles.modalErrorText}>
+                        Username not found in QR code data
+                      </Text>
+                    </View>
+                  );
+                }
+
+                return (
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalUsernameText}>
+                      {qrData.username}
+                    </Text>
+                  </View>
+                );
+              } catch (error) {
+                console.error('Failed to parse QR code data:', error);
+                return (
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalErrorText}>
+                      Failed to load QR code data.
+                    </Text>
+                  </View>
+                );
+              }
+            })()}
+
+            {/* Display the QR Code */}
+            <QRCode value={qrCodeValue} size={200} />
+
+            {/* Display network category and encryption type in a row */}
+            {(() => {
+              if (!qrCodeValue) {
+                return (
+                  <View style={styles.modalDetailsContainer}>
+                    <Text style={styles.modalDetailsText}>
+                      No QR code data available
+                    </Text>
+                  </View>
+                );
+              }
+
+              try {
+                const qrData = JSON.parse(qrCodeValue);
+                return (
+                  <View style={styles.modalDetailsContainer}>
+                    <Text style={styles.modalDetailsText}>
+                      <Icon name="home" size={16} color="#000" />{' '}
+                      {qrData.networkCategory || 'N/A'}
+                    </Text>
+                    <Text style={styles.modalDetailsText}>
+                      <MaterialIcons name="security" size={16} color="#000" />{' '}
+                      {qrData.encryptionType || 'N/A'}
+                    </Text>
+                  </View>
+                );
+              } catch (error) {
+                console.error('Failed to parse QR code data:', error);
+                return (
+                  <View style={styles.modalDetailsContainer}>
+                    <Text style={styles.modalDetailsText}>
+                      Invalid QR code data
+                    </Text>
+                  </View>
+                );
+              }
+            })()}
+
+            {/* Close and Download buttons */}
+            <View style={styles.buttonContainerqr}>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setViewQRCodeModalVisible(false)}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.downloadButton}
+                // onPress={handleDownload}
+              >
+                <MaterialIcons
+                  name="file-download"
+                  size={24}
+                  color="#fff"
+                  style={{alignSelf: 'center'}}
+                />
+              </TouchableOpacity>
             </View>
-          );
-        } catch (error) {
-          console.error('Failed to parse QR code data:', error);
-          return (
-            <Text style={styles.modalErrorText}>Failed to load QR code data.</Text>
-          );
-        }
-      })()}
-
-      {/* Display the QR Code */}
-      <QRCode value={qrCodeValue} size={200} />
-
-      {/* Display network category and encryption type in a row */}
-      {(() => {
-        try {
-          const qrData = JSON.parse(qrCodeValue);
-          return (
-            <View style={styles.modalDetailsContainer}>
-              <Text style={styles.modalDetailsText}>
-                <Icon name="home" size={16} color="#000" />{' '}
-                {qrData.networkCategory}
-              </Text>
-              <Text style={styles.modalDetailsText}>
-                <MaterialIcons name="security" size={16} color="#000" />{' '}
-                {qrData.encryptionType}
-              </Text>
-            </View>
-          );
-        } catch (error) {
-          console.error('Failed to parse QR code data:', error);
-          return null;
-        }
-      })()}
-
-      {/* Close and Download buttons */}
-      <View style={styles.buttonContainerqr}>
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={() => setViewQRCodeModalVisible(false)}>
-          <Text style={styles.closeButtonText}>Close</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.downloadButton}
-          // onPress={handleDownload}
-          >
-          <MaterialIcons name="file-download" size={24} color="#fff" style={{alignSelf:'center'}}/>
-        </TouchableOpacity>
-      </View>
-    </View>
-  </View>
-</Modal>
-
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -620,10 +732,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: '#2196F3',
     borderRadius: 100,
-    width:40,
-    height:40,
-    justifyContent:'center',
-    marginHorizontal:10
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    marginHorizontal: 10,
   },
   modalErrorText: {
     fontSize: 14,
