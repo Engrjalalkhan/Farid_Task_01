@@ -16,7 +16,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 // Initialize banner ad ID (replace with your ad unit ID)
-const bannerAdUnitId = __DEV__ ? TestIds.BANNER : 'ca-app-pub-7220390534702309/6401712340';
+const bannerAdUnitId = __DEV__ ? TestIds.BANNER : '';
 
 const FavoriteScreen = () => {
   const route = useRoute();
