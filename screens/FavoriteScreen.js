@@ -9,16 +9,16 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import {useRoute, useNavigation} from '@react-navigation/native';
 import QRCode from 'react-native-qrcode-svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import {BannerAd, BannerAdSize} from 'react-native-google-mobile-ads';
 
 const FavoriteScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
-  const { favoriteCodes, setFavoriteCodes } = route.params;
+  const {favoriteCodes, setFavoriteCodes} = route.params;
   const [visibleCodes, setVisibleCodes] = React.useState(favoriteCodes);
   const [selectedQRCode, setSelectedQRCode] = React.useState(null);
   const [isModalVisible, setModalVisible] = React.useState(false);
@@ -58,7 +58,7 @@ const FavoriteScreen = () => {
     // This function is to toggle the favorite status; it's not directly used here.
   };
 
-  const renderFavoriteCard = ({ item }) => {
+  const renderFavoriteCard = ({item}) => {
     const qrCodeData = JSON.parse(item);
 
     return (
@@ -77,10 +77,12 @@ const FavoriteScreen = () => {
           <View style={styles.qrCodeContent}>
             <View style={styles.detailsContainer}>
               <Text style={styles.networkCategoryText}>
-                <Icon name="home" size={16} color="#000" /> {qrCodeData.networkCategory}
+                <Icon name="home" size={16} color="#000" />{' '}
+                {qrCodeData.networkCategory}
               </Text>
               <Text style={styles.encryptionTypeText}>
-                <MaterialIcons name="security" size={16} color="#000" /> {qrCodeData.encryptionType}
+                <MaterialIcons name="security" size={16} color="#000" />{' '}
+                {qrCodeData.encryptionType}
               </Text>
             </View>
             <TouchableOpacity style={styles.qrCodeIconContainer}>
@@ -90,7 +92,12 @@ const FavoriteScreen = () => {
           <View style={styles.qrCodeActions}>
             <TouchableOpacity
               onPress={() => handleViewQRCode(item)}
-              style={{ backgroundColor: '#2196F3', width: '50%', borderRadius: 10, height: 30 }}>
+              style={{
+                backgroundColor: '#2196F3',
+                width: '50%',
+                borderRadius: 10,
+                height: 30,
+              }}>
               <Text
                 style={{
                   fontSize: 20,
@@ -195,7 +202,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginHorizontal: 8,
     width: 330,
-    alignSelf:'center'
+    alignSelf: 'center',
   },
   qrCodeHeader: {
     flexDirection: 'row',

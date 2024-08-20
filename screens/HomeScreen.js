@@ -17,10 +17,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import QRCode from 'react-native-qrcode-svg';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  InterstitialAd,
-  AdEventType,
-} from 'react-native-google-mobile-ads';
+import {InterstitialAd, AdEventType} from 'react-native-google-mobile-ads';
 
 // Replace this with your actual AdMob Interstitial Ad Unit ID
 const adUnitId = 'ca-app-pub-7220390534702309/1143784295';
@@ -51,15 +48,15 @@ const HomeScreen = () => {
       AdEventType.LOADED,
       () => {
         console.log('Interstitial ad loaded');
-      }
+      },
     );
 
     const unsubscribeError = interstitial.addAdEventListener(
       AdEventType.ERROR,
-      (error) => {
+      error => {
         console.error('Failed to load interstitial ad:', error);
         loadAd(); // Reload the ad if there was an error
-      }
+      },
     );
 
     const unsubscribeClosed = interstitial.addAdEventListener(
@@ -67,7 +64,7 @@ const HomeScreen = () => {
       () => {
         console.log('Interstitial ad closed');
         loadAd(); // Reload the ad after it’s closed
-      }
+      },
     );
 
     // Clean up listeners on component unmount

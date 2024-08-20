@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, Animated, StyleSheet, Easing } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
+import React, {useEffect, useRef, useState} from 'react';
+import {View, Text, Animated, StyleSheet, Easing} from 'react-native';
+import Svg, {Circle} from 'react-native-svg';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-import { AppOpenAd, TestIds, AdEventType } from 'react-native-google-mobile-ads';
+import {useNavigation} from '@react-navigation/native';
+import {AppOpenAd, TestIds, AdEventType} from 'react-native-google-mobile-ads';
 
 const SplashScreen = () => {
   const [animationCount, setAnimationCount] = useState(0);
@@ -19,7 +19,7 @@ const SplashScreen = () => {
         duration: 1000,
         easing: Easing.linear,
         useNativeDriver: true,
-      })
+      }),
     ).start();
 
     // Animation count update
@@ -40,7 +40,7 @@ const SplashScreen = () => {
       navigation.navigate('Home'); // Ensure 'Home' is the correct route name
     });
 
-    appOpenAd.addAdEventListener(AdEventType.ERROR, (error) => {
+    appOpenAd.addAdEventListener(AdEventType.ERROR, error => {
       console.log('Ad failed to load:', error);
       navigation.navigate('Home');
     });
@@ -71,7 +71,8 @@ const SplashScreen = () => {
       <Text style={styles.title}>Wi-Fi Share</Text>
       <View style={styles.loadingContainer}>
         <Text style={styles.loadingText}>L</Text>
-        <Animated.View style={[styles.loadingIndicator, { transform: [{ rotate: rotation }] }]}>
+        <Animated.View
+          style={[styles.loadingIndicator, {transform: [{rotate: rotation}]}]}>
           <Svg height="18" width="18">
             <Circle
               cx="9"
