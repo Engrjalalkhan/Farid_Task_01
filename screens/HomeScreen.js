@@ -276,6 +276,7 @@ const HomeScreen = () => {
           <TextInput
             style={styles.input}
             placeholder="Username"
+            placeholderTextColor="#888"
             value={username}
             onChangeText={setUsername}
           />
@@ -286,6 +287,7 @@ const HomeScreen = () => {
           <TextInput
             style={styles.input}
             placeholder="Password"
+            placeholderTextColor="#888"
             value={password}
             onChangeText={setPassword}
             secureTextEntry={!passwordVisible}
@@ -518,10 +520,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 8,
+    color:"gray"
   },
   noQrSubText: {
     fontSize: 14,
-    color: '#777',
+    color: 'gray',
     textAlign: 'center',
   },
   qrCodeCard: {
@@ -597,12 +600,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     alignSelf: 'center',
+    color:"gray"
   },
   shareSubText: {
     fontSize: 14,
-    color: '#888',
+    color: 'gray',
     marginBottom: 16,
     textAlign: 'center',
+    
   },
   inputContainer: {
     flexDirection: 'row',
@@ -619,16 +624,19 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
+    color:"black"
   },
   categoryText: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
+    color:"gray"
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 16,
+    color:"gray"
   },
   categoryButton: {
     flex: 1,
@@ -644,6 +652,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
+    color:"gray"
   },
   generateButton: {
     backgroundColor: '#2196F3',
@@ -673,6 +682,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 16,
+    color:"black"
   },
   successModalContent: {
     backgroundColor: '#fff',
@@ -684,6 +694,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 16,
+    color:"black"
   },
   closeButton: {
     marginTop: 16,
@@ -719,6 +730,7 @@ const styles = StyleSheet.create({
   modalDetailsText: {
     fontSize: 14,
     marginHorizontal: 10,
+    color:"gray"
   },
   buttonContainerqr: {
     flexDirection: 'row',

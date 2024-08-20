@@ -186,12 +186,14 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     flex: 1,
     textAlign: 'center',
+    color:"black"
   },
   noFavoritesText: {
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
     marginTop: 20,
+    color:"black"
   },
   qrCodeCard: {
     borderWidth: 1,
